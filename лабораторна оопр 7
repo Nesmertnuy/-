@@ -1,0 +1,51 @@
+class Editor is
+    private field text, curX, curY, selectionWidth
+
+    method setText(text) is
+        this.text = text
+
+    method setCursor(x, y) is
+        this.curX = x
+        this.curY = y
+
+    method setSelectionWidth(width) is
+        this.selectionWidth = width
+
+    method createSnapshot(): Snapshot is
+        // Знімок — це незмінний об'єкт, тому творець передає до
+        // нього свій стан через параметри конструктора.
+        return new Snapshot(this, text, curX, curY, selectionWidth)
+
+// Знімок зберігає минулий стан редактора.
+class Snapshot is
+    private field editor: Editor
+    private field text, curX, curY, selectionWidth
+
+    constructor Snapshot(editor, text, curX, curY, selectionWidth) is
+        this.editor = editor
+        this.text = text
+        this.curX = x
+        this.curY = y
+        this.selectionWidth = selectionWidth
+
+    // У потрібний момент власник знімку може відновити стан
+    // редактора.
+    method restore() is
+        editor.setText(text)
+        editor.setCursor(curX, curY)
+        editor.setSelectionWidth(selectionWidth)
+
+// Опікуном може виступати клас команд (див. патерн Команда). У
+// цьому випадку команда зберігає знімок стану об'єкта-
+// одержувача перед тим, як передати йому дію. А в разі
+// скасування дії, команда поверне об'єкт до попереднього стану.
+class Command is
+    private field backup: Snapshot
+
+    method makeBackup() is
+        backup = editor.createSnapshot()
+
+    method undo() is
+        if (backup != null)
+            backup.restore()
+    // ...
