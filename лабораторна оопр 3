@@ -1,0 +1,53 @@
+interface Strategy is
+    method execute(a, b)
+
+// Кожна конкретна стратегія реалізує загальний інтерфейс у свій
+// власний спосіб.
+class ConcreteStrategyAdd implements Strategy is
+    method execute(a, b) is
+        return a + b
+
+class ConcreteStrategySubtract implements Strategy is
+    method execute(a, b) is
+        return a - b
+
+class ConcreteStrategyMultiply implements Strategy is
+    method execute(a, b) is
+        return a * b
+
+// Контекст завжди працює зі стратегіями через загальний
+// інтерфейс. Він не знає, яку саме стратегію йому подано.
+class Context is
+    private strategy: Strategy
+
+    method setStrategy(Strategy strategy) is
+        this.strategy = strategy
+
+    method executeStrategy(int a, int b) is
+        return strategy.execute(a, b)
+
+
+// Конкретна стратегія вибирається на більш високому рівні,
+// наприклад, конфігуратором всієї програми. Готовий об'єкт-
+// стратегія подається до клієнтського об'єкта, а потім може
+// бути замінений іншою стратегією, в будь-який момент, «на
+// льоту».
+class ExampleApplication is
+    method main() is
+        // 1. Створити об'єкт контексту.
+        // 2. Ввести перше число (n1).
+        // 3. Ввести друге число (n2).
+        // 4. Ввести бажану операцію.
+        // 5. Потім, обрати стратегію:
+
+        if (action == addition) then
+            context.setStrategy(new ConcreteStrategyAdd())
+
+        if (action == subtraction) then
+            context.setStrategy(new ConcreteStrategySubtract())
+
+        if (action == multiplication) then
+            context.setStrategy(new ConcreteStrategyMultiply())
+
+        // 6. Виконати операцію за допомогою стратегії:
+        result = context.executeStrategy(n1, n2)
